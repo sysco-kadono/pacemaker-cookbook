@@ -17,10 +17,6 @@
 # limitations under the License.
 #
 
-include_recipe 'chef-vault::default'
-
-creds = chef_vault_item(node['pacemaker']['pcs']['vault'], node['pacemaker']['pcs']['vault_item'])
-
 package 'pcs'
 package 'fence-agents-all'
 
@@ -34,23 +30,9 @@ hostsfile_entry '127.0.0.1' do
   action :update
 end
 
-node['pacemaker']['corosync']['nodes'].each do |node_name, ip_addr|
-  hostsfile_entry ip_addr do
-    hostname node_name
-    comment 'Update by Chef'
-    action :create_if_missing
-  end
-end
-
-# Compute the hashed password in shadow format
-## FIXME -- this should be a helper-lib method
-alg  = '$6$'
-salt = 'EenedOKN' ## FIXME - generate random salt
-hash = creds['password'].crypt(alg + salt)
-
 # Set password for hacluster user
 user 'hacluster' do
-  password hash
+  password node['pacemaker']['pcs']['shadow']
   action :modify
 end
 

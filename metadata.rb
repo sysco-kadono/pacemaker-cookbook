@@ -9,7 +9,6 @@ source_url       'https://github.com/target/pacemaker-cookbook'
 issues_url       'https://github.com/target/pacemaker-cookbook/issues'
 
 depends 'hostsfile'
-depends 'chef-vault'
 
 supports 'redhat', '>= 7.1'
 supports 'centos', '>= 7.1'

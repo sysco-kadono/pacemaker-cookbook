@@ -20,15 +20,13 @@
 # This recipe can be run from any node in the cluster, but
 # should not be run on more than one node
 
-include_recipe 'chef-vault::default'
+auth_password = node['pacemaker']['pcs']['password']
 
-creds = chef_vault_item(node['pacemaker']['pcs']['vault'], node['pacemaker']['pcs']['vault_item'])
-
-#
+# 
 # Setup authorization for pcs command to funtion
 #
 execute 'Setup authentication tokens for pcs command' do
-  command "pcs cluster auth -u hacluster -p #{creds['password']} #{node['pacemaker']['corosync']['nodes'].keys.join(' ')}"
+  command "pcs cluster auth -u hacluster -p #{auth_password} #{node['pacemaker']['corosync']['nodes'].keys.join(' ')}"
   sensitive true
   creates '/var/lib/pcsd/pcs_user.conf'
   creates '/var/lib/pcsd/tokens'
@@ -36,7 +34,7 @@ end
 
 #
 # Setup corosync and start it
-#
+# 
 execute 'Create and start cluster-engine (corosync)' do
   command "pcs cluster setup --start --name #{node['pacemaker']['corosync']['cluster_name']} #{node['pacemaker']['corosync']['nodes'].keys.join(' ')} && sleep 2"
   creates '/etc/corosync/corosync.conf'

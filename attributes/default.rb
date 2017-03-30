@@ -3,6 +3,8 @@
 #==============================
 default['pacemaker']['pcs']['vault'] = 'vault_pacemaker'
 default['pacemaker']['pcs']['vault_item'] = 'secrets'
+default['pacemaker']['pcs']['password'] = nil
+default['pacemaker']['pcs']['shadow'] = nil
 
 #==============================
 # Corosync Settings
