@@ -27,7 +27,6 @@ auth_password = node['pacemaker']['pcs']['password']
 #
 execute 'Setup authentication tokens for pcs command' do
   command "pcs cluster auth -u hacluster -p #{auth_password} #{node['pacemaker']['corosync']['nodes'].keys.join(' ')}"
-  sensitive true
   creates '/var/lib/pcsd/pcs_user.conf'
   creates '/var/lib/pcsd/tokens'
 end
